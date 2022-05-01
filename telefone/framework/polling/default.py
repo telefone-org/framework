@@ -23,20 +23,18 @@ class Polling(ABCPolling):
     async def get_updates(self) -> Optional[List[dict]]:
         raw_updates = []
 
-        # try:
-        raw_updates = await self.api.request(
-            "getUpdates",
-            {"offset": self.offset, "allowed_updates": self.allowed_updates},
-        )
-        # except TelegramAPIError[401, 404] as e:
-        #     logger.critical(e)
-        #     self.stop()
+        try:
+            raw_updates = await self.api.request(
+                "getUpdates",
+                {"offset": self.offset, "allowed_updates": self.allowed_updates},
+            )
+        except TelegramAPIError[401, 404] as e:
+            logger.critical(e)
+            self.stop()
 
         return raw_updates
 
     async def listen(self) -> AsyncIterator[dict]:
-        self._stop = False
-
         while not self._stop:
             try:
                 updates = await self.get_updates()
