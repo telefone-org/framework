@@ -1,6 +1,6 @@
 ---
 name: Feature request
-description: Suggest a new feature
+about: Suggest a new feature
 labels: enhancement
 assignees: exthrempty
 ---

@@ -1,6 +1,6 @@
 ---
 name: Bug
-description: Describe unexpected behavior that occured while using the framework
+about: Describe unexpected behavior that occured while using the framework
 labels: bug
 assignees: exthrempty
 ---
