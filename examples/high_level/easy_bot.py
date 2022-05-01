@@ -8,7 +8,8 @@ bot.labeler.vbml_ignore_case = True
 
 # Use message, chat_message or private_message decorators to handle
 # corresponding types of messages. To define special logic you can use
-# built-in rules or make your own by inheriting from tottle.dispatch.rules.abc.ABCRule.
+# built-in rules or make your own by inheriting from 
+# telefone.framework.dispatch.rule.abc.ABCRule.
 @bot.on.private_message(text=["hi", "hello", "howdy"])
 async def message_handler(_) -> str:
     # Match (text for short) rule compares previously set and newly received text and validates it.
