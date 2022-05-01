@@ -4,6 +4,9 @@ version = "0.0.0"
 description = "A modern Telegram Bot API framework built with speed and stability in mind"
 authors = []
 license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/telefone-org/framework"
+repository = "https://github.com/telefone-org/framework"
 
 [tool.poetry.dependencies]
 python = "^3.9"
