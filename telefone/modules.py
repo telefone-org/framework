@@ -6,6 +6,6 @@ json = choice_in_order(["ujson", "hyperjson", "orjson"], do_import=True, default
 logger = choice_in_order(["loguru"], do_import=True, default="logging")
 
 if logger.__name__ == "logging":
-    logger = logging.getLogger("tottle")
+    logger = logging.getLogger("telefone")
 elif logger.__name__ == "loguru":
     logger = getattr(logger, "logger")
