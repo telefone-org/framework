@@ -150,7 +150,8 @@ class Labeler(ABCLabeler):
                 FromFuncHandler(
                     func,
                     PeerRule(False),
-                    *rules * self.auto_rules,
+                    *rules,
+                    *self.auto_rules,
                     *self.get_custom_rules(custom_rules),
                     blocking=blocking,
                 )
