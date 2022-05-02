@@ -34,7 +34,7 @@ class MessageMin(Message):
         disable_web_page_preview: typing.Optional[bool] = None,
         disable_notification: typing.Optional[bool] = None,
         reply_markup: typing.Optional[dict] = None,
-        parse_mode: typing.Optional[str] = "MarkdownV2",
+        parse_mode: typing.Optional[str] = None,
     ) -> Message:
         params = {k: v for k, v in locals().items() if k != "self" and v is not None}
         params["chat_id"] = self.chat.id
