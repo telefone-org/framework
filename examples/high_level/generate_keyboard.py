@@ -9,7 +9,7 @@ KEYBOARD_STANDARD.add(Button(text="Button 1"))
 KEYBOARD_STANDARD.add(Button(text="Button 2"))
 KEYBOARD_STANDARD.row()
 KEYBOARD_STANDARD.add(Button(text="Button 3"))
-KEYBOARD_STANDARD = KEYBOARD_STANDARD.dict()
+KEYBOARD_STANDARD = KEYBOARD_STANDARD.get_markup()
 
 # <.add()> and <.row()> methods return the instance of Keyboard,
 # so you can use it as builder
@@ -19,7 +19,7 @@ KEYBOARD_WITH_BUILDER = (
     .add(Button(text="Button 2"))
     .row()
     .add(Button(text="Button 3"))
-    .dict()
+    .get_markup()
 )
 
 assert KEYBOARD_STANDARD == KEYBOARD_WITH_BUILDER

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import List, Optional
 
-from telefone_types.objects import InlineKeyboardMarkup
+from telefone_types.objects import InlineKeyboardMarkup, ReplyKeyboardMarkup
 
 from telefone.tools.dev.keyboard.button import Button, InlineButton
 
@@ -57,6 +57,9 @@ class Keyboard(ABCMarkup):
 
     def dict(self) -> dict:
         return {k: v for k, v in self.__dict__.items() if v is not None}
+
+    def get_markup(self) -> ReplyKeyboardMarkup:
+        return ReplyKeyboardMarkup(**self.dict())
 
 
 class InlineKeyboard(ABCMarkup):
