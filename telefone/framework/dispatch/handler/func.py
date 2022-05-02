@@ -29,7 +29,6 @@ class FromFuncHandler(ABCHandler):
     async def handle(self, update: "Update", **context) -> Any:
         acceptable_keys = list(inspect.signature(self.handler).parameters.keys())[1:]
         acceptable_context = {k: v for k, v in context.items() if k in acceptable_keys}
-        print(acceptable_context)
         return await self.handler(update, **acceptable_context)
 
     def __eq__(self, obj: object) -> bool:
