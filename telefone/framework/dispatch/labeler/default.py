@@ -1,8 +1,7 @@
 import re
-from typing import Any, Callable, Dict, List, Type, Union
+from typing import Any, Dict, List, Type, Union
 
-import vbml
-from telefone_types.updates import BotUpdateType
+from vbml import Patcher
 
 from telefone.framework.dispatch.handler.func import FromFuncHandler
 from telefone.framework.dispatch.labeler.abc import (
@@ -30,6 +29,8 @@ from telefone.framework.dispatch.view.default.raw import (
     BotHandlerBasement,
     BotRawUpdateView,
 )
+from telefone_types.updates import BaseBotUpdate, BotUpdateType
+
 
 DEFAULT_CUSTOM_RULES: Dict[str, Type[ABCRule]] = {
     "text": MatchRule,
@@ -59,7 +60,7 @@ class Labeler(ABCLabeler):
 
         self.rule_config: Dict[str, Any] = {
             "vbml_flags": re.MULTILINE,  # Flags for VBMLRule
-            "vbml_patcher": vbml.Patcher(),  # Patcher for VBMLRule
+            "vbml_patcher": Patcher(),  # Patcher for VBMLRule
         }
 
     @property
@@ -76,11 +77,11 @@ class Labeler(ABCLabeler):
             self.rule_config["vbml_flags"] |= re.IGNORECASE
 
     @property
-    def vbml_patcher(self) -> vbml.Patcher:
+    def vbml_patcher(self) -> Patcher:
         return self.rule_config["vbml_patcher"]
 
     @vbml_patcher.setter
-    def vbml_patcher(self, patcher: vbml.Patcher):
+    def vbml_patcher(self, patcher: Patcher):
         self.rule_config["vbml_patcher"] = patcher
 
     @property
@@ -93,11 +94,16 @@ class Labeler(ABCLabeler):
 
     def message(
         self, *rules: "ABCRule", blocking: bool = True, **custom_rules
-    ) -> LabeledMessageHandler:
+    ) -> "LabeledMessageHandler":
+        assert all(
+            isinstance(rule, ABCRule) for rule in rules
+        ), "All rules must be subclasses of ABCRule or rule shortcuts"
+
         def decorator(func):
             self.message_view.handlers.append(
                 FromFuncHandler(
                     func,
+                    *rules,
                     *self.auto_rules,
                     *self.get_custom_rules(custom_rules),
                     blocking=blocking,
@@ -109,12 +115,17 @@ class Labeler(ABCLabeler):
 
     def chat_message(
         self, *rules: "ABCRule", blocking: bool = True, **custom_rules
-    ) -> LabeledMessageHandler:
+    ) -> "LabeledMessageHandler":
+        assert all(
+            isinstance(rule, ABCRule) for rule in rules
+        ), "All rules must be subclasses of ABCRule or rule shortcuts"
+
         def decorator(func):
             self.message_view.handlers.append(
                 FromFuncHandler(
                     func,
                     PeerRule(True),
+                    *rules,
                     *self.auto_rules,
                     *self.get_custom_rules(custom_rules),
                     blocking=blocking,
@@ -129,13 +140,17 @@ class Labeler(ABCLabeler):
         *rules: "ABCRule",
         blocking: bool = True,
         **custom_rules,
-    ) -> LabeledMessageHandler:
+    ) -> "LabeledMessageHandler":
+        assert all(
+            isinstance(rule, ABCRule) for rule in rules
+        ), "All rules must be subclasses of ABCRule or rule shortcuts"
+
         def decorator(func):
             self.message_view.handlers.append(
                 FromFuncHandler(
                     func,
                     PeerRule(False),
-                    *self.auto_rules,
+                    *rules * self.auto_rules,
                     *self.get_custom_rules(custom_rules),
                     blocking=blocking,
                 )
@@ -147,11 +162,15 @@ class Labeler(ABCLabeler):
     def raw_update(
         self,
         update: Union[UpdateName, List[UpdateName]],
-        dataclass: Callable = dict,
+        dataclass: Union[Type[dict], Type["BaseBotUpdate"]] = dict,
         *rules: "ABCRule",
         blocking: bool = True,
         **custom_rules,
-    ) -> LabeledHandler:
+    ) -> "LabeledHandler":
+        assert all(
+            isinstance(rule, ABCRule) for rule in rules
+        ), "All rules must be subclasses of ABCRule or rule shortcuts"
+
         if not isinstance(update, list):
             update = [update]
 
@@ -178,8 +197,11 @@ class Labeler(ABCLabeler):
     def load(self, labeler: "Labeler"):
         self.message_view.handlers.extend(labeler.message_view.handlers)
         self.message_view.middlewares.extend(labeler.message_view.middlewares)
-        self.raw_update_view.handlers.update(labeler.raw_update_view.handlers)
         self.raw_update_view.middlewares.extend(labeler.raw_update_view.middlewares)
+
+        for event, handler_basements in labeler.raw_update_view.handlers.items():
+            event_handlers = self.raw_update_view.handlers.setdefault(event, [])
+            event_handlers.extend(handler_basements)
 
     def get_custom_rules(self, custom_rules: Dict[str, Any]) -> List["ABCRule"]:
         return [self.custom_rules[k].with_config(self.rule_config)(v) for k, v in custom_rules.items()]  # type: ignore
