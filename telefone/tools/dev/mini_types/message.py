@@ -1,8 +1,9 @@
 import typing
 
-from telefone_types import Message, StatePeer
-
 from telefone.api import ABCAPI, API
+
+from telefone_types import StatePeer
+from telefone_types.objects import Message
 
 
 class MessageMin(Message):
