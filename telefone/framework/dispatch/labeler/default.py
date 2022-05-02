@@ -1,5 +1,5 @@
 import re
-from typing import Any, Callable, Dict, List, Set, Tuple, Type, Union
+from typing import Any, Callable, Dict, List, Type, Union
 
 import vbml
 from telefone_types.updates import BotUpdateType
