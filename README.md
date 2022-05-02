@@ -35,6 +35,7 @@ from telefone import Bot
 
 bot = Bot("your-token")
 
+
 @bot.on.message()
 async def handler(_) -> str:
     return "Hello world!"
