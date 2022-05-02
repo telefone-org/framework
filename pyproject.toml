@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "telefone"
-version = "0.1.1"
+version = "0.1.2"
 description = "A modern Telegram Bot API framework built with speed and stability in mind"
 authors = []
 license = "MIT"
