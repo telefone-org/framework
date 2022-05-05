@@ -8,7 +8,6 @@ from telefone.framework.dispatch.view.abc import ABCDispenseView
 from telefone.modules import logger
 from telefone.tools.dev.mini_types.message import MessageMin
 
-DEFAULT_STATE_KEY = "id"
 Message = MessageMin
 
 T_contra = TypeVar("T_contra", list, dict, contravariant=True)
@@ -19,12 +18,10 @@ class ABCMessageView(
     ABCDispenseView[T_contra, F_contra], ABC, Generic[T_contra, F_contra]
 ):
     handlers: List["ABCHandler"]
-    state_source_key: str
     default_text_approximators: List[Callable[["Message"], str]]
 
     def __init__(self):
         super().__init__()
-        self.state_source_key = DEFAULT_STATE_KEY
         self.default_text_approximators = []
 
     @staticmethod

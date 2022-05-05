@@ -3,8 +3,9 @@ import re
 from abc import abstractmethod
 from typing import Awaitable, Callable, Coroutine, List, Optional, Tuple, Type, Union
 
-from telefone_types import BaseStateGroup
 from vbml import Patcher, Pattern
+
+from telefone_types.states import BaseStateGroup, get_state_repr
 
 from telefone.framework.dispatch.rule.abc import ABCRule
 from telefone.tools.dev.mini_types.message import MessageMin
@@ -192,15 +193,18 @@ class ReplyMessageRule(ABCMessageRule):
 
 
 class StateRule(ABCMessageRule):
-    def __init__(self, state: Union[List[BaseStateGroup], BaseStateGroup]):
+    def __init__(
+        self,
+        state: Optional[Union[List["BaseStateGroup"], "BaseStateGroup"]] = None,
+    ):
         if not isinstance(state, list):
             state = [] if state is None else [state]
-        self.state = state
+        self.state = [get_state_repr(s) for s in state]
 
-    async def check(self, message: Message) -> bool:
-        if message.state_peer is None:
+    async def check(self, event: Message) -> bool:
+        if event.state_peer is None:
             return not self.state
-        return message.state_peer.state in self.state
+        return event.state_peer.state in self.state
 
 
 class StateGroupRule(ABCMessageRule):

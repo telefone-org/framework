@@ -35,4 +35,4 @@ class ABCBotMessageView(ABCMessageView[dict, T_contra], ABC, Generic[T_contra]):
 
 class BotMessageView(ABCBotMessageView["MessageMin"]):
     def get_state_key(self, message: "MessageMin") -> Optional[int]:
-        return getattr(message, self.state_source_key, None)
+        return message.dict().get("chat").get("id")
