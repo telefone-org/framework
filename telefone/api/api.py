@@ -28,7 +28,7 @@ from telefone.http.abc import ABCHTTPClient
 from telefone.http.default import SingleAioHTTPClient
 from telefone.modules import logger
 
-APIRequest = NamedTuple("APIRequest", [("method", str), ("data", dict)])
+APIRequest = NamedTuple("APIRequest", [("method", str), ("params", dict)])
 
 
 class API(ABCAPI, APIMethods):
@@ -54,9 +54,9 @@ class API(ABCAPI, APIMethods):
             ABCResponseValidator
         ] = DEFAULT_RESPONSE_VALIDATORS
 
-    async def request(self, method: str, data: Optional[dict] = None) -> dict:
+    async def request(self, method: str, params: Optional[dict] = None) -> dict:
         """Makes a single request opening a session"""
-        data = await self.validate_request(data)
+        data = await self.validate_request(params)
         response = await self.http_client.request_text(
             url=self.request_url + method,
             method="POST",
@@ -64,9 +64,9 @@ class API(ABCAPI, APIMethods):
         )
 
         logger.debug(
-            "Request {} with {} data returned {}".format(method, data, response)
+            "Request {} with {} data returned {}".format(method, params, response)
         )
-        return await self.validate_response(method, data, response)
+        return await self.validate_response(method, params, response)
 
     async def request_many(
         self, requests: Iterable[APIRequest]  # type: ignore
@@ -79,9 +79,11 @@ class API(ABCAPI, APIMethods):
                 data=data,
             )
             logger.debug(
-                "Request {} with {} data returned {}".format(method, data, response)
+                "Request {} with {} data returned {}".format(
+                    method, request.data, response
+                )
             )
-            yield await self.validate_response(method, data, response)
+            yield await self.validate_response(method, request.data, response)
 
     async def validate_response(
         self, method: str, data: dict, response: Union[dict, str]
