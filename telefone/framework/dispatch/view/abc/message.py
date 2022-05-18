@@ -6,7 +6,8 @@ from telefone.framework.dispatch.dispenser.abc import ABCStateDispenser
 from telefone.framework.dispatch.handler.abc import ABCHandler
 from telefone.framework.dispatch.view.abc import ABCDispenseView
 from telefone.modules import logger
-from telefone.tools.dev.mini_types.message import MessageMin
+from telefone.tools.dev.mini_types import MessageMin
+
 
 Message = MessageMin
 

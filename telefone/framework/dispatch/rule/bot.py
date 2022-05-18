@@ -5,10 +5,11 @@ from typing import Awaitable, Callable, Coroutine, List, Optional, Tuple, Type, 
 
 from vbml import Patcher, Pattern
 
-from telefone_types.states import BaseStateGroup, get_state_repr
-
 from telefone.framework.dispatch.rule.abc import ABCRule
 from telefone.tools.dev.mini_types.message import MessageMin
+
+from telefone_types.states import BaseStateGroup, get_state_repr
+
 
 DEFAULT_PREFIXES = ["!", "/"]
 Message = MessageMin

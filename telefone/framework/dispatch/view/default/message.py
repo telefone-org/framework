@@ -1,14 +1,11 @@
 from abc import ABC
-from typing import TYPE_CHECKING, Generic, Optional, TypeVar
+from typing import Generic, Optional, TypeVar
 
 from telefone_types.updates import BotUpdateType
 
 from telefone.framework.dispatch.return_manager.base import BotMessageReturnManager
 from telefone.framework.dispatch.view.abc import ABCMessageView
-from telefone.tools.dev.mini_types.message import message_min
-
-if TYPE_CHECKING:
-    from telefone.tools.dev.mini_types.message import MessageMin
+from telefone.tools.dev.mini_types.message import MessageMin, message_min
 
 
 T_contra = TypeVar("T_contra", contravariant=True)

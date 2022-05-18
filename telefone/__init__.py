@@ -41,6 +41,7 @@ from .tools import (
     InlineKeyboard,
     Keyboard,
     MessageMin,
-) 
+)
+
 Message = MessageMin
 update_types = UpdateTypes
