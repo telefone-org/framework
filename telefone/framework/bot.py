@@ -27,7 +27,6 @@ class Bot(ABCFramework):
         loop: Optional[AbstractEventLoop] = None,
         loop_wrapper: Optional[LoopWrapper] = None,
         error_handler: Optional["ABCErrorHandler"] = None,
-        task_each_update: bool = True,
     ):
         self.api: Union[ABCAPI, API] = API(token) if token is not None else api  # type: ignore
         self.error_handler = error_handler or ErrorHandler()
@@ -37,7 +36,6 @@ class Bot(ABCFramework):
         self._polling: "ABCPolling" = polling or Polling(self.api)
         self._router: "ABCRouter" = router or Router()
         self._loop = loop
-        self.task_each_update = task_each_update
 
     async def run_polling(
         self, offset: int = 0, allowed_updates: list[str] = []
