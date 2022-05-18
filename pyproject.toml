@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "telefone"
-version = "0.1.5"
+version = "0.2"
 description = "A modern Telegram Bot API framework built with speed and stability in mind"
 authors = []
 license = "MIT"
@@ -15,7 +15,7 @@ choicelib = "^0.1.5"
 aiohttp = "^3.8.1"
 vbml = "^1.1.post1"
 watchgod = "^0.8.2"
-telefone-types = "^6.0.0"
+telefone-types = "6.0.0.17"
 
 [tool.poetry.dev-dependencies]
 isort = "^5.10.1"
