@@ -40,6 +40,10 @@ async def who_am_i_handler(_, user: User) -> str:
     return f"I remember you! {first_name} you are!"
 
 
+# Register middlewares that we have created above.
 bot.labeler.message_view.register_middleware(RegistrationMiddleware)
 bot.labeler.message_view.register_middleware(InfoMiddleware)
+
+# Run loop > loop.run_forever() > with tasks created in loop_wrapper before.
+# The main polling task for bot is bot.run_polling()
 bot.run_forever()
