@@ -1,9 +1,11 @@
 from typing import (
     Any,
     AsyncIterator,
+    Dict,
     Iterable,
     List,
     NamedTuple,
+    NewType,
     NoReturn,
     Optional,
     Union,
@@ -28,6 +30,7 @@ from telefone.http.abc import ABCHTTPClient
 from telefone.http.default import SingleAioHTTPClient
 from telefone.modules import logger
 
+APIResponse = NewType("APIResponse", Union[NoReturn, Dict[str, Any]])
 APIRequest = NamedTuple("APIRequest", [("method", str), ("params", dict)])
 
 
@@ -54,7 +57,7 @@ class API(ABCAPI, APIMethods):
             ABCResponseValidator
         ] = DEFAULT_RESPONSE_VALIDATORS
 
-    async def request(self, method: str, params: dict) -> dict:
+    async def request(self, method: str, params: dict) -> APIResponse:
         """Makes a single request opening a session"""
         data = await self.validate_request(params)
         response = await self.http_client.request_text(
@@ -68,13 +71,15 @@ class API(ABCAPI, APIMethods):
         )
         return await self.validate_response(method, params, response)
 
-    async def request_many(self, requests: Iterable[APIRequest]) -> AsyncIterator[dict]:
+    async def request_many(
+        self, requests: Iterable[APIRequest]
+    ) -> AsyncIterator[APIResponse]:
         for request in requests:
             yield await self.request(request.method, request.params)
 
     async def validate_response(
         self, method: str, data: dict, response: Union[dict, str]
-    ) -> Union[Any, NoReturn]:
+    ) -> APIResponse:
         """Validates response from Telegram,
         to change validations change API.response_validators (list of ResponseValidator's)"""
         for validator in self.response_validators:
