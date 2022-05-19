@@ -68,22 +68,9 @@ class API(ABCAPI, APIMethods):
         )
         return await self.validate_response(method, params, response)
 
-    async def request_many(
-        self, requests: Iterable[APIRequest]  # type: ignore
-    ) -> AsyncIterator[dict]:
+    async def request_many(self, requests: Iterable[APIRequest]) -> AsyncIterator[dict]:
         for request in requests:
-            method, data = request.method, await self.validate_request(request.params)  # type: ignore
-            response = await self.http_client.request_text(
-                url=self.request_url + method,
-                method="POST",
-                data=data,
-            )
-            logger.debug(
-                "Request {} with {} data returned {}".format(
-                    method, request.params, response
-                )
-            )
-            yield await self.validate_response(method, request.params, response)
+            yield await self.request(request.method, request.params)
 
     async def validate_response(
         self, method: str, data: dict, response: Union[dict, str]
