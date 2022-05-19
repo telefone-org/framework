@@ -54,7 +54,7 @@ class API(ABCAPI, APIMethods):
             ABCResponseValidator
         ] = DEFAULT_RESPONSE_VALIDATORS
 
-    async def request(self, method: str, params: Optional[dict] = None) -> dict:
+    async def request(self, method: str, params: dict) -> dict:
         """Makes a single request opening a session"""
         data = await self.validate_request(params)
         response = await self.http_client.request_text(
@@ -72,7 +72,7 @@ class API(ABCAPI, APIMethods):
         self, requests: Iterable[APIRequest]  # type: ignore
     ) -> AsyncIterator[dict]:
         for request in requests:
-            method, data = request.method, await self.validate_request(request.data)  # type: ignore
+            method, data = request.method, await self.validate_request(request.params)  # type: ignore
             response = await self.http_client.request_text(
                 url=self.request_url + method,
                 method="POST",
@@ -80,10 +80,10 @@ class API(ABCAPI, APIMethods):
             )
             logger.debug(
                 "Request {} with {} data returned {}".format(
-                    method, request.data, response
+                    method, request.params, response
                 )
             )
-            yield await self.validate_response(method, request.data, response)
+            yield await self.validate_response(method, request.params, response)
 
     async def validate_response(
         self, method: str, data: dict, response: Union[dict, str]
