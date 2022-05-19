@@ -1,12 +1,13 @@
 [tool.poetry]
 name = "telefone"
-version = "0.2"
+version = "0.2.1"
 description = "A modern Telegram Bot API framework built with speed and stability in mind"
 authors = []
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/telefone-org/framework"
 repository = "https://github.com/telefone-org/framework"
+exclude = ["examples/files/*"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -16,6 +17,7 @@ aiohttp = "^3.8.1"
 vbml = "^1.1.post1"
 watchgod = "^0.8.2"
 telefone-types = "6.0.0.17"
+aiofiles = "^0.8.0"
 
 [tool.poetry.dev-dependencies]
 isort = "^5.10.1"
