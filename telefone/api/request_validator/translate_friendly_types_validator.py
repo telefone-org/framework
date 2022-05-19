@@ -10,7 +10,7 @@ class TranslateFriendlyTypesRequestValidator(ABCRequestValidator):
     async def validate(self, request: dict) -> dict:
         data = FormData(quote_fields=False)
 
-        for k, v in request.copy().items():
+        for k, v in request.items():
             if isinstance(v, str) or isinstance(v, int):
                 data.add_field(k, str(v))
             elif isinstance(v, bool):
