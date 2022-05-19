@@ -2,14 +2,7 @@ from io import BytesIO
 from pathlib import Path
 from typing import Optional, Union
 
-try:
-    aiofiles = __import__("aiofiles")
-except ImportError as e:
-    raise RuntimeError(
-        "You need to install `aiofiles` package to be able to use file_tools."
-    ) from e
-
-open = aiofiles.open
+from aiofiles import open
 
 
 class File:
