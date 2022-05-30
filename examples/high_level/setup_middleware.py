@@ -1,48 +1,70 @@
-from telefone import Bot, Message, BaseMiddleware
-from telefone.tools import CtxStorage
+from telefone import BaseMiddleware, Bot, Message
+from telefone_types.objects import User
 
 # Make a bot with a token from an environment variable.
 bot = Bot(__import__("os").getenv("token"))
-# Make a storage in memory.
-storage = CtxStorage({})
-
-# Make a dummy type for storing user information.
-User = __import__("collections").namedtuple("User", ("first_name", "last_name"))
 
 
-class RegistrationMiddleware(BaseMiddleware[Message]):
-    async def pre(self) -> dict:
-        user = storage.get(self.update.from_.id)
-        if user is None:
-            await self.update.answer(
-                f"User {self.update.from_.id} was registered in temporary storage"
-            )
-            user = User(
-                self.update.from_.first_name,
-                self.update.from_.last_name,
-            )
-            storage.set(self.update.from_.id, user)
-        self.send({"user": user})
+class SimpleMiddleware(BaseMiddleware[Message]):
+    async def pre(self) -> None:
+        """
+        This middleware will be called before all handlers.
+        It can be used for registering users, validating update data, etc.
+        """
+        await self.update.answer("Hello, world!")
+
+    async def post(self) -> None:
+        """
+        This middleware will be called after all handlers. It can be used
+        for logging and analyzing after update is processed.
+        """
+        await self.update.answer("Goodbye, world!")
 
 
-class InfoMiddleware(BaseMiddleware[Message]):
-    async def post(self):
+class PassthroughMiddleware(BaseMiddleware[Message]):
+    """
+    You can actually have any number of pre and post middlewares.
+    We are making another ones right there.
+    """
+
+    async def pre(self) -> None:
+        """
+        Often you might need to pass an argument from middleware to the handlers
+        or stop processing the update altogether. In the first case, you should
+        use `self.send()` method. In the second case, you should use `self.stop()`
+        as shown below.
+        """
+        if self.update.from_.is_bot:
+            self.stop("Messages from bots are not allowed to be handled.")
+
+        self.send({"user": self.update.from_})
+
+    async def post(self) -> None:
+        """
+        As was mentioned before, we can use post middlewares
+        primarily for collecting and logging data. Let's print out
+        a view and a list of handlers message was processed with.
+        """
         await self.update.answer(
-            f"Message was processed with:\n\n"
-            f"View: {self.view=}\n"
-            f"Handlers: {self.handlers=}"
+            "Message was processed with {0} view and {1} handlers.".format(
+                self.view, ", ".join(str(h) for h in self.handlers)
+            )
         )
 
 
-@bot.on.message(command="me")
+@bot.on.message(command="profile")
 async def who_am_i_handler(_, user: User) -> str:
+    """
+    A simple handler just to proof that middleware
+    are working nice and sound.
+    """
     first_name = user.first_name.capitalize()
     return f"I remember you! {first_name} you are!"
 
 
-# Register middlewares that we have created above.
-bot.labeler.message_view.register_middleware(RegistrationMiddleware)
-bot.labeler.message_view.register_middleware(InfoMiddleware)
+# Register middleware that we've created above.
+bot.labeler.message_view.register_middleware(SimpleMiddleware)
+bot.labeler.message_view.register_middleware(PassthroughMiddleware)
 
 # Run loop > loop.run_forever() > with tasks created in loop_wrapper before.
 # The main polling task for bot is bot.run_polling()
