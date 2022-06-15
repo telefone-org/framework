@@ -6,6 +6,8 @@ from watchfiles import awatch
 
 from telefone.modules import logger
 
+STARTUP_DIR: str = os.getcwd()
+
 
 def restart() -> NoReturn:
     args = sys.argv.copy()
@@ -14,7 +16,7 @@ def restart() -> NoReturn:
     if sys.platform == "win32":
         args = [f'"{arg}"' for arg in args]
 
-    os.chdir(os.getcwd())
+    os.chdir(STARTUP_DIR)
     os.execv(sys.executable, args)
 
 
