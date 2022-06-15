@@ -7,7 +7,6 @@ license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/telefone-org/framework"
 repository = "https://github.com/telefone-org/framework"
-exclude = ["examples/files/*"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -15,7 +14,7 @@ pydantic = "^1.9.0"
 choicelib = "^0.1.5"
 aiohttp = "^3.8.1"
 vbml = "^1.1.post1"
-watchgod = "^0.8.2"
+watchfiles = "^0.14"
 telefone-types = "6.0.0.17"
 aiofiles = "^0.8.0"
 
