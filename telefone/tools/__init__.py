@@ -7,6 +7,5 @@ from .dev import (
     Keyboard,
     LoopWrapper,
     MessageMin,
-    message_min,
     watch_to_reload,
 )
