@@ -55,7 +55,7 @@ We aim to release a feature a week, because we have a lot in planning and are as
 
 ## Contributing
 
-You can file and issue or send a PR to help us maintain this project. We are always glad to see your support. Thank you!
+You can file an issue or send a PR to help us maintain this project. We are always glad to see your support. Thank you!
 
 ## License
 
