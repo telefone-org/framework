@@ -1,3 +1,5 @@
+from enum import Enum
+
 from aiohttp import FormData
 from pydantic import BaseModel
 
@@ -21,9 +23,11 @@ class TranslateFriendlyTypesRequestValidator(ABCRequestValidator):
                 data.add_field(k, json.dumps(await self.validate(v)))
             elif isinstance(v, BaseModel):
                 data.add_field(k, v.json(exclude_none=True, encoder=json.dumps))
+            elif isinstance(v, Enum):
+                data.add_field(k, v.value)
             elif isinstance(v, File):
                 data.add_field(k, v.file_source, filename=v.name)
             elif v is None:
                 pass
-
+        
         return data

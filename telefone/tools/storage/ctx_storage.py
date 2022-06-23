@@ -1,7 +1,7 @@
 from typing import Any, Hashable
 
-from telefone.tools.dev.ctx_tool import BaseContext
-from telefone.tools.dev.storage.abc import ABCStorage
+from telefone.tools.ctx_tool import BaseContext
+from telefone.tools.storage.abc import ABCStorage
 
 
 class CtxStorage(ABCStorage, BaseContext):

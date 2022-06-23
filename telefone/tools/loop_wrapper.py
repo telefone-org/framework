@@ -12,8 +12,8 @@ from typing import (
 )
 
 from telefone.modules import logger
-from telefone.tools.dev.auto_reload import watch_to_reload
-from telefone.tools.dev.delayed_task import DelayedTask
+from telefone.tools.auto_reload import watch_to_reload
+from telefone.tools.delayed_task import DelayedTask
 
 if TYPE_CHECKING:
     Task = Coroutine[Any, Any, Any]

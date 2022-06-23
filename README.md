@@ -47,21 +47,16 @@ bot.run_forever()
 
 ### 🧹 Clean API
 
-We're working hard to make the experience even more flawless for developers. In contrast to our competition, we have a lot better code structure and more comprehensive constructs.
+We're working hard to make the experience more flawless for developers. We have a lot better code structure and more comprehensive constructs in contrast to our competition.
 
 ### 🧑‍🔧 Frequent updates
 
-We are as interested in developing this framework as you are in using it, so we aim to release a feature a week. We have a lot in planning!
+We aim to release a feature a week, because we have a lot in planning and are as interested in developing this framework as you are in using it!
 
 ## Contributing
 
-To support our work, you can:
-
-- file an issue
-- send a PR
-
-We are always glad to see your support, so you can open an issue or make a PR in case you noticed something went wrong. Thank you!
+You can file an issue or send a PR to help us maintain this project. We are always glad to see your support. Thank you!
 
 ## License
 
-© 2020-2022 exthrempty
+© 2022 exthrempty

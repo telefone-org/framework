@@ -34,7 +34,7 @@ async def chat_message_handler(msg: Message):
         await bot.api.ban_chat_member(chat_id=msg.chat.id, user_id=msg.from_.id)
     except TelegramAPIError[400]:
         # This line, when executed, will call shortcut method to answer message from user
-        # (see https://github.com/telefone-org/framework/blob/main/telefone/tools/dev/mini_types/message.py).
+        # (see https://github.com/telefone-org/framework/blob/main/telefone/tools/mini_types/message.py).
         await msg.answer(f"An error occured while kicking a chat member.")
 
 

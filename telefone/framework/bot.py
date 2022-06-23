@@ -13,7 +13,7 @@ from telefone.framework.dispatch import (
 )
 from telefone.framework.polling import ABCPolling, Polling
 from telefone.modules import logger
-from telefone.tools.dev.loop_wrapper import LoopWrapper
+from telefone.tools.loop_wrapper import LoopWrapper
 
 
 class Bot(ABCFramework):
