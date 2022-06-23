@@ -5,7 +5,7 @@ from telefone_types.updates import BotUpdateType
 
 from telefone.framework.dispatch.return_manager.base import BotMessageReturnManager
 from telefone.framework.dispatch.view.abc import ABCMessageView
-from telefone.tools.dev.mini_types.message import MessageMin
+from telefone.tools.mini_types.message import MessageMin
 
 
 T_contra = TypeVar("T_contra", contravariant=True)

@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from telefone_types.objects import InlineKeyboardMarkup, ReplyKeyboardMarkup
 
-from telefone.tools.dev.keyboard.button import Button, InlineButton
+from telefone.tools.keyboard.button import Button, InlineButton
 
 
 @dataclass()

@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Union
 from telefone.framework.dispatch.return_manager import ABCReturnManager
 
 if TYPE_CHECKING:
-    from telefone.tools.dev.mini_types.message import MessageMin
+    from telefone.tools.mini_types.message import MessageMin
 
 
 class BotMessageReturnManager(ABCReturnManager):
