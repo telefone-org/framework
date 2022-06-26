@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from telefone.tools.mini_types.message import MessageMin
 
 
-class BotMessageReturnManager(ABCReturnManager):
+class MessageReturnManager(ABCReturnManager):
     @ABCReturnManager.instance_of(str)
     async def str_handler(self, value: str, message: "MessageMin", _: dict):
         await message.answer(value)
