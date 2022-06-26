@@ -1,58 +1,59 @@
 from abc import ABC, abstractmethod
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Dict,
-    Generic,
-    List,
-    Optional,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import Any, Callable, Coroutine, Dict, List, Optional, Type, Union
 
-from telefone.api.abc import ABCAPI
-from telefone.framework.dispatch.middleware import BaseMiddleware
+from telefone_types.updates import BaseBotUpdate
+
+from telefone.api import ABCAPI, API
+from telefone.framework.dispatch.dispenser.abc import ABCStateDispenser
+from telefone.framework.dispatch.handler.abc import ABCHandler
+from telefone.framework.dispatch.handler.func import FromFuncHandler
+from telefone.framework.dispatch.middleware.base import BaseMiddleware
+from telefone.framework.dispatch.return_manager.abc import ABCReturnManager
+from telefone.framework.dispatch.rule.abc import ABCRule
 from telefone.modules import logger
 
-if TYPE_CHECKING:
-    from telefone.framework.dispatch.dispenser import ABCStateDispenser
-    from telefone.framework.dispatch.handler import ABCHandler
-    from telefone.framework.dispatch.return_manager import ABCReturnManager
 
-    Handlers = Union[List["ABCHandler"], Dict[Any, List]]
-
-T_contra = TypeVar("T_contra", list, dict, contravariant=True)
-
-
-class ABCView(ABC, Generic[T_contra]):
-    handlers: "Handlers"
+class ABCView(ABC):
+    handler_return_manager: Optional["ABCReturnManager"]
+    handlers: Union[List["ABCHandler"], Dict[Any, List[Any]]]
     middlewares: List[Type["BaseMiddleware"]]
-    handler_return_manager: "ABCReturnManager"
 
     @abstractmethod
-    def __init__(self):
-        self.handlers = []
-        self.middlewares = []
-        self.handler_return_manager = None  # type: ignore
+    async def process_update(self, update: dict) -> bool:
+        pass
 
     @abstractmethod
-    async def process_update(self, update: T_contra) -> bool:
+    async def handle_update(
+        self,
+        update: dict,
+        ctx_api: "ABCAPI",
+        state_dispenser: "ABCStateDispenser",
+    ) -> None:
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def get_update_model(
+        update: dict, ctx_api: Union["ABCAPI", "API"]
+    ) -> "BaseBotUpdate":
         pass
 
     async def pre_middleware(
         self,
-        update: T_contra,
+        update: dict,
         context_variables: Optional[dict] = None,
     ) -> Optional[List[BaseMiddleware]]:
-        """Run all of the pre middleware methods and return an exception if any error occurs"""
+        """
+        Run all of the pre middleware methods
+        and return an exception if any error occurs
+        """
         mw_instances = []
 
         for middleware in self.middlewares:
             mw_instance = middleware(update, view=self)
             await mw_instance.pre()
             if not mw_instance.can_forward:
-                logger.debug(f"{mw_instance} pre returned error {mw_instance.error}")
+                logger.debug(f"Pre middleware {mw_instance} returned error {mw_instance.error}")
                 return None
 
             mw_instances.append(mw_instance)
@@ -69,7 +70,6 @@ class ABCView(ABC, Generic[T_contra]):
         handlers: Optional[List["ABCHandler"]] = None,
     ):
         for middleware in mw_instances:
-            # Update or leave value
             middleware.handle_responses = (
                 handle_responses or middleware.handle_responses
             )
@@ -77,17 +77,10 @@ class ABCView(ABC, Generic[T_contra]):
 
             await middleware.post()
             if not middleware.can_forward:
-                logger.debug(f"{middleware} post returned error {middleware.error}")
+                logger.debug(
+                    f"Post middleware {middleware} returned error {middleware.error!r}"
+                )
                 return middleware.error
-
-    @abstractmethod
-    async def handle_update(
-        self,
-        update: T_contra,
-        ctx_api: "ABCAPI",
-        state_dispenser: "ABCStateDispenser",
-    ) -> None:
-        pass
 
     def register_middleware(self, middleware: Type[BaseMiddleware]):
         try:
@@ -96,6 +89,12 @@ class ABCView(ABC, Generic[T_contra]):
         except TypeError:
             raise ValueError("Argument is not a class")
         self.middlewares.append(middleware)
+
+    @staticmethod
+    def get_update_type(update: dict) -> str:
+        update_copy = update.copy()
+        update_copy.pop("update_id")
+        return list(update_copy)[0]
 
     def __repr__(self) -> str:
         return (
