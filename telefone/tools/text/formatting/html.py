@@ -51,12 +51,12 @@ def code_block(code: str) -> str:
     Formats the code block.
     Escapes HTML characters inside the block.
     """
-    return f"<pre>{escape(code)}</pre>", escape(code)
+    return f"<pre>{escape(code)}</pre>"
 
 
 def code_block_with_lang(code: str, lang: str) -> str:
     lang = escape(lang).replace('"', "&quot;")
-    return f'<pre><code class="language-{lang}.replace()">{escape(code)}</code></pre>'
+    return f'<pre><code class="language-{lang}">{escape(code)}</code></pre>'
 
 
 def code_inline(string: str) -> str:
