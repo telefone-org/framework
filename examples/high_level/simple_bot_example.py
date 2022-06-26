@@ -1,4 +1,5 @@
-from telefone import Bot, BotUpdateType, Message, TelegramAPIError, UpdateTypes
+from telefone import Bot, BotUpdateType, Message, TelegramAPIError
+from telefone_types.updates import MessageUpdate
 
 # Make a bot with a token from an environment variable.
 bot = Bot(__import__("os").getenv("token"))
@@ -40,14 +41,13 @@ async def chat_message_handler(msg: Message):
 
 # You can also handle other types of updates besides messages. To do that, use raw_update decorator
 # and provide it with a type and a dataclass of update that you want to handle.
-@bot.on.raw_update(BotUpdateType.EDITED_MESSAGE, UpdateTypes.EditedMessageUpdate)
-async def edited_message_handler(upd: UpdateTypes.EditedMessageUpdate):
+@bot.on.raw_update(BotUpdateType.EDITED_MESSAGE, MessageUpdate)
+async def edited_message_handler(upd: MessageUpdate):
     # This line contains ctx_api call we talked about in the previous example. This is the only way
     # we can send messages from raw update handlers.
     await upd.ctx_api.send_message(upd.chat.id, "Hm? I heard you edit a message.")
 
 
-# Runs loop > loop.run_forever() > with tasks created in loop_wrapper before,
-# read the loop wrapper documentation to comprehend this.
+# Run loop > loop.run_forever() > with tasks created in loop_wrapper before.
 # The main polling task for bot is bot.run_polling()
 bot.run_forever()

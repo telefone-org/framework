@@ -1,5 +1,3 @@
-from typing import NoReturn
-
 from telefone import Bot, Message
 from telefone.api.utils import File
 
@@ -9,7 +7,7 @@ bot = Bot(__import__("os").getenv("token"))
 
 # Register a handler that will upload files.
 @bot.on.message(command="upload")
-async def upload_handler(msg: Message) -> NoReturn:
+async def upload_handler(msg: Message) -> None:
     # Let's upload a picture of fresh red apples.
     await msg.ctx_api.send_photo(
         chat_id=msg.chat.id,

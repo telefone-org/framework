@@ -58,6 +58,7 @@ async def mention_handler(msg: Message) -> None:
         parse_mode=ParseMode.HTML,
     )
 
+
 # Run loop > loop.run_forever() > with tasks created in loop_wrapper before.
 # The main polling task for bot is bot.run_polling()
 bot.run_forever()
