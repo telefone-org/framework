@@ -1,8 +1,6 @@
 import typing
 
-from telefone.api import ABCAPI, API
-
-from telefone_types import APIMethods, StatePeer
+from telefone_types import APIMethods
 from telefone_types.objects import (
     ForceReply,
     InlineKeyboardMarkup,
@@ -11,16 +9,10 @@ from telefone_types.objects import (
     ReplyKeyboardMarkup,
     ReplyKeyboardRemove,
 )
+from telefone_types.updates import MessageUpdate
 
 
-class MessageMin(Message):
-    unprepared_ctx_api: typing.Optional[typing.Any] = None
-    state_peer: typing.Optional[StatePeer] = None
-
-    @property
-    def ctx_api(self) -> typing.Union["ABCAPI", "API"]:
-        return getattr(self, "unprepared_ctx_api")
-
+class MessageMin(MessageUpdate):
     async def answer(
         self,
         text: typing.Optional[str] = None,
@@ -71,10 +63,8 @@ class MessageMin(Message):
     async def forward(
         self,
         chat_id: typing.Union[int, str],
-        from_chat_id: typing.Optional[typing.Union[int, str]] = None,
         disable_notification: typing.Optional[bool] = None,
         protect_content: typing.Optional[bool] = None,
-        message_id: typing.Optional[int] = None,
         **kwargs
     ) -> Message:
         params = APIMethods.get_params(locals())
