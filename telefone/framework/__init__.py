@@ -1,9 +1,7 @@
 from .abc import ABCFramework
-from .abc_blueprint import ABCBlueprint
+from .blueprint import ABCBlueprint, Blueprint
 from .bot import Bot
-from .bot_blueprint import Blueprint
 from .dispatch import (
-    ABCDispenseView,
     ABCHandler,
     ABCRouter,
     ABCRule,
@@ -11,8 +9,8 @@ from .dispatch import (
     ABCView,
     AndRule,
     BaseMiddleware,
-    BotMessageReturnManager,
     BuiltinStateDispenser,
+    MessageReturnManager,
     MiddlewareError,
     NotRule,
     OrRule,

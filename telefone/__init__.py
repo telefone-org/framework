@@ -1,5 +1,5 @@
 from telefone_types.states import BaseStateGroup, StatePeer
-from telefone_types.updates import BotUpdateType, UpdateTypes
+from telefone_types.updates import BaseBotUpdate, BotUpdateType
 
 from .api import (
     ABCAPI,
@@ -14,7 +14,6 @@ from .api import (
 from .exception_factory import ABCErrorHandler, ErrorHandler, TelegramAPIError, swear
 from .framework import (
     ABCBlueprint,
-    ABCDispenseView,
     ABCFramework,
     ABCHandler,
     ABCPolling,
@@ -26,8 +25,8 @@ from .framework import (
     BaseMiddleware,
     Blueprint,
     Bot,
-    BotMessageReturnManager,
     BuiltinStateDispenser,
+    MessageReturnManager,
     MiddlewareError,
     NotRule,
     OrRule,
@@ -48,4 +47,3 @@ from .tools import (
 )
 
 Message = MessageMin
-update_types = UpdateTypes
