@@ -1,7 +1,7 @@
 from typing import Optional
 
 from telefone.api import ABCAPI
-from telefone.framework.abc_blueprint import ABCBlueprint
+from telefone.framework.blueprint.abc import ABCBlueprint
 from telefone.framework.bot import Bot
 from telefone.framework.dispatch.labeler import Labeler
 from telefone.framework.dispatch.router.base import Router
