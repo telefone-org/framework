@@ -1,15 +1,13 @@
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Coroutine, Dict, List, Optional, Type, Union
+from typing import Any, Dict, List, Optional, Type, Union
 
-from telefone_types.updates import BaseBotUpdate
+from telefone_types.updates import BaseBotUpdate, BotUpdateType
 
 from telefone.api import ABCAPI, API
 from telefone.framework.dispatch.dispenser.abc import ABCStateDispenser
 from telefone.framework.dispatch.handler.abc import ABCHandler
-from telefone.framework.dispatch.handler.func import FromFuncHandler
 from telefone.framework.dispatch.middleware.base import BaseMiddleware
 from telefone.framework.dispatch.return_manager.abc import ABCReturnManager
-from telefone.framework.dispatch.rule.abc import ABCRule
 from telefone.modules import logger
 
 
@@ -91,10 +89,9 @@ class ABCView(ABC):
         self.middlewares.append(middleware)
 
     @staticmethod
-    def get_update_type(update: dict) -> str:
-        update_copy = update.copy()
-        update_copy.pop("update_id")
-        return list(update_copy)[0]
+    def get_update_type(update: dict) -> BotUpdateType:
+        update_type = list(update.keys())[1]
+        return BotUpdateType(update_type)
 
     def __repr__(self) -> str:
         return (
