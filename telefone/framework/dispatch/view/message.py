@@ -1,15 +1,12 @@
-from typing import Callable, Coroutine, Optional, Union
+from typing import Union
 
-from telefone_types.updates import BotUpdateType
+from telefone_types.updates import BotUpdateType, MessageUpdate
 
 from telefone.api import ABCAPI, API
 from telefone.framework.dispatch.dispenser.abc import ABCStateDispenser
-from telefone.framework.dispatch.handler.func import FromFuncHandler
 from telefone.framework.dispatch.return_manager.message import MessageReturnManager
-from telefone.framework.dispatch.rule.abc import ABCRule
 from telefone.framework.dispatch.view.abc import ABCView
 from telefone.modules import logger
-from telefone.tools.mini_types import MessageMin
 
 
 class MessageView(ABCView):
@@ -20,11 +17,11 @@ class MessageView(ABCView):
         self.handler_return_manager = MessageReturnManager()
 
     @staticmethod
-    def get_update_model(update: dict, ctx_api: Union["ABCAPI", "API"]) -> "MessageMin":
-        return MessageMin(**update["message"], unprepared_ctx_api=ctx_api)
+    def get_update_model(update: dict, ctx_api: Union["ABCAPI", "API"]) -> "MessageUpdate":
+        return MessageUpdate(**update["message"], unprepared_ctx_api=ctx_api)
 
     async def process_update(self, update: dict) -> bool:
-        return BotUpdateType(self.get_update_type(update)) == BotUpdateType.MESSAGE
+        return self.get_update_type(update) == BotUpdateType.MESSAGE
 
     async def handle_update(
         self, update: dict, ctx_api: "ABCAPI", state_dispenser: "ABCStateDispenser"
@@ -32,7 +29,6 @@ class MessageView(ABCView):
         logger.debug("Handling update with message view")
 
         message = self.get_update_model(update, ctx_api)
-        print(message.get_state_key())
         message.state_peer = await state_dispenser.cast(message.get_state_key())
 
         context_variables = {}
