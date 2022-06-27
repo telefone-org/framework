@@ -1,5 +1,5 @@
 from telefone_types.states import BaseStateGroup, StatePeer
-from telefone_types.updates import BaseBotUpdate, BotUpdateType
+from telefone_types.updates import BaseBotUpdate, BotUpdateType, MessageUpdate
 
 from .api import (
     ABCAPI,
@@ -42,8 +42,7 @@ from .tools import (
     InlineKeyboard,
     Keyboard,
     LoopWrapper,
-    MessageMin,
     watch_to_reload,
 )
 
-Message = MessageMin
+Message = MessageUpdate
