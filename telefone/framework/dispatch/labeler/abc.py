@@ -1,13 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import Any, Callable, Dict, List, Union
 
-from telefone_types.updates.types import BotUpdateType
+from telefone_types.updates import BotUpdateType, MessageUpdate
 
 from telefone.framework.dispatch.rule import ABCRule
 from telefone.framework.dispatch.view import ABCView
-from telefone.tools.mini_types import MessageMin
 
-LabeledMessageHandler = Callable[..., Callable[[MessageMin], Any]]
+LabeledMessageHandler = Callable[..., Callable[[MessageUpdate], Any]]
 LabeledHandler = Callable[..., Callable[[Any], Any]]
 
 
