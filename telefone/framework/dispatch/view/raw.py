@@ -28,11 +28,11 @@ class RawUpdateView(ABCView):
         self, handler_basement: "HandlerBasement", update: dict, ctx_api: "ABCAPI"
     ) -> Union[dict, "BaseBotUpdate"]:
         return handler_basement.dataclass(
-            **update.get(self.get_update_type(update)), unprepared_ctx_api=ctx_api
+            **update.get(self.get_update_type(update).value), unprepared_ctx_api=ctx_api
         )
 
     async def process_update(self, update: dict) -> bool:
-        return BotUpdateType(self.get_update_type(update)) in self.handlers
+        return self.get_update_type(update) in self.handlers
 
     async def handle_update(
         self,
