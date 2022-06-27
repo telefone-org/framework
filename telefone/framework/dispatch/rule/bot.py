@@ -4,18 +4,17 @@ from abc import abstractmethod
 from typing import Awaitable, Callable, Coroutine, List, Optional, Tuple, Type, Union
 
 from telefone_types.states import BaseStateGroup, get_state_repr
-from telefone_types.updates import CallbackQueryUpdate
+from telefone_types.updates import CallbackQueryUpdate, MessageUpdate
 from vbml import Patcher, Pattern
 
 from telefone.framework.dispatch.rule.abc import ABCRule
-from telefone.tools.mini_types import MessageMin
 
 DEFAULT_PREFIXES = ["!", "/"]
 
 
 class ABCMessageRule(ABCRule):
     @abstractmethod
-    async def check(self, message: MessageMin) -> bool:
+    async def check(self, message: MessageUpdate) -> bool:
         pass
 
 
@@ -48,7 +47,7 @@ class CommandRule(ABCMessageRule):
         )
         self.sep = sep
 
-    async def check(self, message: MessageMin) -> Union[dict, bool]:
+    async def check(self, message: MessageUpdate) -> Union[dict, bool]:
         for prefix in self.prefixes:
             if self.args_count == 0 and message.text == prefix + self.command_text:
                 return True
@@ -75,7 +74,7 @@ class CoroutineRule(ABCMessageRule):
 
 
 class FuncRule(ABCMessageRule):
-    def __init__(self, func: Callable[[MessageMin], Union[bool, Awaitable]]):
+    def __init__(self, func: Callable[[MessageUpdate], Union[bool, Awaitable]]):
         self.func = func
 
     async def check(self, _) -> Union[dict, bool]:
@@ -117,7 +116,7 @@ class LevensteinRule(ABCMessageRule):
 
         return current_row[n]
 
-    async def check(self, message: MessageMin) -> bool:
+    async def check(self, message: MessageUpdate) -> bool:
         for levenstein_text in self.levenstein_texts:
             if self.distance(message.text, levenstein_text) <= self.max_distance:
                 return True
@@ -148,7 +147,7 @@ class MatchRule(ABCMessageRule):
         self.patterns = pattern
         self.patcher = patcher or self.config["vbml_patcher"]
 
-    async def check(self, message: MessageMin) -> Union[dict, bool]:
+    async def check(self, message: MessageUpdate) -> Union[dict, bool]:
         for pattern in self.patterns:
             result = self.patcher.check(pattern, message.text)
             if result not in (None, False):
@@ -160,7 +159,7 @@ class MessageLengthRule(ABCMessageRule):
     def __init__(self, min_length: int):
         self.min_length = min_length
 
-    async def check(self, message: MessageMin) -> bool:
+    async def check(self, message: MessageUpdate) -> bool:
         return len(message.text) >= self.min_length
 
 
@@ -168,7 +167,7 @@ class PeerRule(ABCMessageRule):
     def __init__(self, from_chat: bool = True):
         self.from_chat = from_chat
 
-    async def check(self, message: MessageMin) -> bool:
+    async def check(self, message: MessageUpdate) -> bool:
         if message.chat.id != message.from_.id:
             return self.from_chat
         return not self.from_chat
@@ -188,7 +187,7 @@ class RegexRule(ABCMessageRule):
 
         self.regexp = regexp
 
-    async def check(self, message: MessageMin) -> Union[dict, bool]:
+    async def check(self, message: MessageUpdate) -> Union[dict, bool]:
         for regexp in self.regexp:
             match = re.match(regexp, message.text)
             if match:
@@ -197,7 +196,7 @@ class RegexRule(ABCMessageRule):
 
 
 class ReplyMessageRule(ABCMessageRule):
-    async def check(self, message: MessageMin) -> bool:
+    async def check(self, message: MessageUpdate) -> bool:
         if not message.reply_to_message:
             return False
         return True
@@ -212,7 +211,7 @@ class StateRule(ABCMessageRule):
             state = [] if state is None else [state]
         self.state = [get_state_repr(s) for s in state]
 
-    async def check(self, event: MessageMin) -> bool:
+    async def check(self, event: MessageUpdate) -> bool:
         if event.state_peer is None:
             return not self.state
         return event.state_peer.state in self.state
@@ -227,7 +226,7 @@ class StateGroupRule(ABCMessageRule):
             state_group = [] if state_group is None else [state_group]
         self.state_group = state_group
 
-    async def check(self, message: MessageMin) -> bool:
+    async def check(self, message: MessageUpdate) -> bool:
         if message.state_peer is None:
             return not self.state_group
         return type(message.state_peer.state) in self.state_group
