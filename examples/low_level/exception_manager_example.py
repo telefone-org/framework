@@ -1,12 +1,10 @@
-from typing import NoReturn
-
 from telefone import API, TelegramAPIError
 
 # Make an API with a token from an environment variable.
 api = API(__import__("os").getenv("token"))
 
 
-async def main() -> NoReturn:
+async def main() -> None:
     try:
         await api.send_message(1, "Hi bestie!")
     except TelegramAPIError[400]:
