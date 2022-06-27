@@ -20,7 +20,7 @@ async def start_handler(msg: Message) -> None:
     # This is a handler that sends a simple inline keyboard
     # containing three buttons with their respective callback data.
     await msg.answer(
-        "Hi! I'm a bot. Quickly, pick any of these fruits on the keyboard!",
+        "Pick any of these fruits on the keyboard!",
         reply_markup=INLINE_KEYBOARD,
     )
 
@@ -29,11 +29,9 @@ async def start_handler(msg: Message) -> None:
     BotUpdateType.CALLBACK_QUERY, CallbackQueryUpdate, callback_data=["apple", "orange"]
 )
 async def fruit_handler(upd: CallbackQueryUpdate) -> None:
-    # To answer to a callback query, you can use <.answer_callback_query()> method.
+    # To answer to a callback query, you can use <.answer()> method.
     # This would result in a small message showing up the screen.
-    await upd.ctx_api.answer_callback_query(
-        upd.id, "You chose a fruit! Fruits are healthy and delicious 🍋"
-    )
+    await upd.answer("You chose a fruit! Fruits are healthy and delicious 🍋")
 
 
 @bot.on.raw_update(
@@ -42,10 +40,8 @@ async def fruit_handler(upd: CallbackQueryUpdate) -> None:
 async def shoe_handler(upd: CallbackQueryUpdate) -> None:
     # If you need to grab user's attention, you can display an alert
     # with the content you want to show. To do that, pass `show_alert`
-    # parameter to the <.answer_callback_query()> method.
-    await upd.ctx_api.answer_callback_query(
-        upd.id, "You chose a shoe! What the fuck", show_alert=True
-    )
+    # parameter to the <.answer()> method.
+    await upd.answer("You chose a shoe! What the fuck", show_alert=True)
 
 
 # Run loop > loop.run_forever() > with tasks created in loop_wrapper before.
