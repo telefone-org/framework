@@ -9,7 +9,6 @@ from telefone.framework.dispatch.labeler.abc import (
     ABCLabeler,
     LabeledHandler,
     LabeledMessageHandler,
-    UpdateName,
 )
 from telefone.framework.dispatch.rule.abc import ABCRule
 from telefone.framework.dispatch.rule.bot import (
