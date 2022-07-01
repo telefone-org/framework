@@ -1,8 +1,8 @@
-from telefone import Bot, BotUpdateType, Message, TelegramAPIError
+from telefone import Bot, BotUpdateType, Message, TelegramAPIError, Token
 from telefone_types.updates import MessageUpdate
 
 # Make a bot with a token from an environment variable.
-bot = Bot(__import__("os").getenv("token"))
+bot = Bot(Token.from_env())
 # Configure match rule to ignore case in which messages are sent.
 bot.labeler.vbml_ignore_case = True
 

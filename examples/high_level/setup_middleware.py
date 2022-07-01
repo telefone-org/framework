@@ -1,8 +1,8 @@
-from telefone import BaseMiddleware, Bot, Message
+from telefone import BaseMiddleware, Bot, Message, Token
 from telefone_types.objects import User
 
 # Make a bot with a token from an environment variable.
-bot = Bot(__import__("os").getenv("token"))
+bot = Bot(Token.from_env())
 
 
 @bot.labeler.message_view.register_middleware

@@ -1,8 +1,8 @@
-from telefone import Bot, Message
+from telefone import Bot, Message, Token
 from telefone.tools.text import html, markdown, ParseMode
 
 # Make a bot with a token from an environment variable.
-bot = Bot(__import__("os").getenv("token"))
+bot = Bot(Token.from_env())
 
 
 @bot.on.message(command="markdown")

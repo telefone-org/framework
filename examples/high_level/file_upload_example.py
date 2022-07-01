@@ -1,8 +1,8 @@
-from telefone import Bot, Message
+from telefone import Bot, Message, Token
 from telefone.api.utils import File
 
 # Make a bot with a token from an environment variable.
-bot = Bot(__import__("os").getenv("token"))
+bot = Bot(Token.from_env())
 
 
 # Register a handler that will upload files.

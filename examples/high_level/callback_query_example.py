@@ -1,8 +1,8 @@
-from telefone import Bot, BotUpdateType, InlineButton, InlineKeyboard, Message
+from telefone import Bot, BotUpdateType, InlineButton, InlineKeyboard, Message, Token
 from telefone_types.updates import CallbackQueryUpdate
 
 # Make a bot with a token from an environment variable.
-bot = Bot(__import__("os").getenv("token"))
+bot = Bot(Token.from_env())
 
 # Create an inline keyboard with a button that will be used to trigger a callback.
 INLINE_KEYBOARD = (
