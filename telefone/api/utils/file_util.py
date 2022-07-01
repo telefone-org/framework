@@ -7,7 +7,7 @@ from aiofiles import open
 
 class File:
     def __init__(
-        self, name: Optional[str] = None, file_source: Optional[BytesIO] = None
+        self, name: Optional[str] = None, file_source: Optional[bytes] = None
     ) -> None:
         self.name, self.file_source = name, file_source
 
