@@ -15,7 +15,7 @@
 
 Telefone framework is a Python interface to Telegram Bot API. It acts as a layer of convenience, providing useful tools to build powerful bots, and has many features like [text formatting], [file uploading], [blueprints], [middleware] and [FSM].
 
-It does all of that while maintaining high performance and blazing speed, while being customizable and extensible thanks to its thought out architecture.
+It does all of that while maintaining high performance and blazing speed, being customizable and extensible thanks to its thought out architecture.
 
 ```bash script
 pip install telefone
