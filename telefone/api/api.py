@@ -26,6 +26,7 @@ from telefone.api.response_validator import (
     DEFAULT_RESPONSE_VALIDATORS,
     ABCResponseValidator,
 )
+from telefone.api.utils import Token
 from telefone.http.abc import ABCHTTPClient
 from telefone.http.default import SingleAioHTTPClient
 from telefone.modules import logger
@@ -40,7 +41,7 @@ class API(ABCAPI, APIMethods):
 
     def __init__(
         self,
-        token: str,
+        token: Token,
         ignore_errors: bool = False,
         http_client: Optional["ABCHTTPClient"] = None,
         request_rescheduler: Optional[ABCRequestRescheduler] = None,

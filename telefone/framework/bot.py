@@ -1,7 +1,7 @@
 from asyncio import AbstractEventLoop, get_event_loop
 from typing import NoReturn, Optional, Union
 
-from telefone.api import ABCAPI, API
+from telefone.api import ABCAPI, API, Token
 from telefone.exception_factory import ABCErrorHandler, ErrorHandler
 from telefone.framework.abc import ABCFramework
 from telefone.framework.dispatch import (
@@ -19,7 +19,7 @@ from telefone.tools.loop_wrapper import LoopWrapper
 class Bot(ABCFramework):
     def __init__(
         self,
-        token: Optional[str] = None,
+        token: Optional[Token] = None,
         api: Optional[ABCAPI] = None,
         polling: Optional[ABCPolling] = None,
         router: Optional["ABCRouter"] = None,
