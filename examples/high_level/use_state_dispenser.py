@@ -1,15 +1,14 @@
-from telefone import BaseStateGroup, Bot, BotUpdateType, Message
+from telefone import BaseStateGroup, Bot, BotUpdateType, Message, Token
 from telefone.tools.keyboard import InlineButton, InlineKeyboard
 
 from telefone_types.updates import CallbackQueryUpdate
 
 # Make a bot with a token from an environment variable.
-bot = Bot(__import__("os").getenv("token"))
+bot = Bot(Token.from_env())
 
 # Declare a dialog flow of questionnaire.
 class QuestionnaireState(BaseStateGroup):
     NAME, AGE, THING = "name", "age", "thing"
-
 
 # Make a keyboard for picking a favorite thing.
 THING_KEYBOARD = (
@@ -21,8 +20,14 @@ THING_KEYBOARD = (
     .get_markup()
 )
 
+# If you need, you can change the key which your bot stores the state by,
+# replacing the `get_state_key` method inline.
+# NOTE: this is not recommended, because changing functional code
+# at runtime is considered a bad idea.
+# Message.get_state_key = lambda m: m.chat.id
 
-@bot.on.message(command="start")
+
+@bot.on.private_message(command="start")
 async def start_handler(msg: Message) -> None:
     # Start conversation with the user.
     await msg.answer(
@@ -33,22 +38,18 @@ async def start_handler(msg: Message) -> None:
     await bot.state_dispenser.set(msg.from_.id, QuestionnaireState.NAME)
 
 
-@bot.on.message(state=QuestionnaireState.NAME)
+@bot.on.private_message(state=QuestionnaireState.NAME)
 async def name_handler(msg: Message) -> None:
     # Handle name entered by user.
     if not msg.text.isalpha():
-        await msg.answer(
-            "Your name must be alphabetic. "
-            "I recognize and appreciate your uniqueness, but "
-            "it's hard for me to believe there are actual people named like that."
-        )
+        await msg.answer("Your name must be alphabetic.")
         return
 
     await msg.answer(f"So nice to see you, {msg.text}. How old are you?")
     await bot.state_dispenser.set(msg.from_.id, QuestionnaireState.AGE, name=msg.text)
 
 
-@bot.on.message(state=QuestionnaireState.AGE)
+@bot.on.private_message(state=QuestionnaireState.AGE)
 async def age_handler(msg: Message) -> None:
     # Get a value from state context.
     name = msg.state_peer.payload["name"]
