@@ -1,34 +1,29 @@
-<h1 align="center">telefone</h1>
+# Telefone framework
 
-<p align="center">A modern Telegram Bot API framework built with speed and stability in mind</p>
+[//]: # (Links to examples)
+[text formatting]: https://github.com/telefone-org/framework/blob/main/examples/high_level/formatting_example.py
+[middleware]: https://github.com/telefone-org/framework/blob/main/examples/high_level/setup_middleware.py
+[file uploading]: https://github.com/telefone-org/framework/blob/main/examples/high_level/file_upload_example.py
+[blueprints]: https://github.com/telefone-org/framework/blob/main/examples/high_level/load_blueprints.py
+[FSM]: https://github.com/telefone-org/framework/blob/main/examples/high_level/use_state_dispenser.py
 
-<p align="center">
-    <a href="https://pypi.org/project/telefone">
-        <img src="https://img.shields.io/pypi/v/telefone?label=Current+version&style=flat-square">
-    </a>
-    <a href="https://github.com/telefone-org/framework">
-        <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/telefone-org/framework?label=Repo+size&style=flat-square">
-    </a>
-    <a href="https://github.com/telefone-org/framework/blob/main/LICENSE">
-        <img src="https://img.shields.io/pypi/l/telefone-types?label=License&style=flat-square">
-    </a>
-</p>
+![Current version](https://img.shields.io/pypi/v/telefone?label=Current+version&style=for-the-badge)
+![Package downloads](https://img.shields.io/pypi/dw/telefone?style=for-the-badge)
+![Repo size](https://img.shields.io/github/repo-size/telefone-org/framework?label=Repo+size&style=for-the-badge)
 
-## Install
+## Highlights
 
-1) Stable version (recommended):
+Telefone framework is a Python interface to Telegram Bot API. It acts as a layer of convenience, providing useful tools to build powerful bots, and has many features like [text formatting], [file uploading], [blueprints], [middleware] and [FSM].
 
-    ```shell script
-    pip install -U telefone
-    ```
+It does all of that while maintaining high performance and blazing speed, and is also widely customizable thanks to its thought out architecture.
 
-2) Latest version (cutting-edge changes):
-
-    ```shell script
-    pip install -U https://github.com/telefone-org/framework/archive/main.zip
-    ```
+```bash script
+pip install telefone
+```
 
 ## Examples
+
+This example shows how easy it is to build a Telegram bot. Your bot is up and running in only **six** lines of code!
 
 ```python
 from telefone import Bot
@@ -43,20 +38,8 @@ async def handler(_) -> str:
 bot.run_forever()
 ```
 
-## Advantages
-
-### 🧹 Clean API
-
-We're working hard to make the experience more flawless for developers. We have a lot better code structure and more comprehensive constructs in contrast to our competition.
-
-### 🧑‍🔧 Frequent updates
-
-We aim to release a feature a week, because we have a lot in planning and are as interested in developing this framework as you are in using it!
-
-## Contributing
-
-You can file an issue or send a PR to help us maintain this project. We are always glad to see your support. Thank you!
+Are you interested yet? Then check out [all of our high-level examples](https://github.com/telefone-org/framework/tree/main/examples/high_level).
 
 ## License
 
-© 2022 exthrempty
+This project is [MIT licensed](https://github.com/telefone-org/framework/blob/main/LICENSE). Copyright © 2022 exthrempty
