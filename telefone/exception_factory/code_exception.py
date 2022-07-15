@@ -28,7 +28,9 @@ class CodeException(Exception):
     def __class_getitem__(cls: T, code: Tuple[int, ...]) -> Tuple[T, ...]:
         ...
 
-    def __class_getitem__(cls: T, code: Union[int, Tuple[int, ...]]) -> Union[T, Tuple[T, ...]]:
+    def __class_getitem__(
+        cls: T, code: Union[int, Tuple[int, ...]]
+    ) -> Union[T, Tuple[T, ...]]:
         if cls.__code_specified__:
             raise TypeError("exception code already specified")
 

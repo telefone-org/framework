@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any, Callable, Union
 from .abc import ABCHandler
 
 if TYPE_CHECKING:
-    from telefone_types.objects import Update
+    from telefone_types import BaseBotUpdate
 
     from telefone.framework.dispatch.rule.abc import ABCRule
 
@@ -15,7 +15,7 @@ class FromFuncHandler(ABCHandler):
         self.rules = rules
         self.blocking = blocking
 
-    async def filter(self, update: "Update") -> Union[dict, bool]:
+    async def filter(self, update: "BaseBotUpdate") -> Union[dict, bool]:
         rule_context = {}
         for rule in self.rules:
             result = await rule.check(update)
@@ -26,7 +26,7 @@ class FromFuncHandler(ABCHandler):
             rule_context.update(result)
         return rule_context
 
-    async def handle(self, update: "Update", **context) -> Any:
+    async def handle(self, update: "BaseBotUpdate", **context) -> Any:
         acceptable_keys = list(inspect.signature(self.handler).parameters.keys())[1:]
         acceptable_context = {k: v for k, v in context.items() if k in acceptable_keys}
         return await self.handler(update, **acceptable_context)

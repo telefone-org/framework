@@ -29,5 +29,5 @@ class TranslateFriendlyTypesRequestValidator(ABCRequestValidator):
                 data.add_field(k, v.file_source, filename=v.name)
             elif v is None:
                 pass
-        
+
         return data

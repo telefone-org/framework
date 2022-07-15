@@ -1,6 +1,7 @@
 import re
 from typing import Any, Dict, List, Type, Union
 
+from telefone_types.updates import BaseBotUpdate, BotUpdateType
 from vbml import Patcher
 
 from telefone.framework.dispatch.handler.func import FromFuncHandler
@@ -8,15 +9,15 @@ from telefone.framework.dispatch.labeler.abc import (
     ABCLabeler,
     LabeledHandler,
     LabeledMessageHandler,
-    UpdateName,
 )
 from telefone.framework.dispatch.rule.abc import ABCRule
 from telefone.framework.dispatch.rule.bot import (
+    CallbackDataRule,
     CommandRule,
     CoroutineRule,
     FuncRule,
-    LevensteinRule,
-    MatchRule,
+    LevenshteinRule,
+    TextRule,
     MessageLengthRule,
     PeerRule,
     RegexRule,
@@ -24,17 +25,13 @@ from telefone.framework.dispatch.rule.bot import (
     StateRule,
 )
 from telefone.framework.dispatch.view.abc import ABCView
-from telefone.framework.dispatch.view.default.message import BotMessageView
-from telefone.framework.dispatch.view.default.raw import (
-    BotHandlerBasement,
-    BotRawUpdateView,
-)
-from telefone_types.updates import BaseBotUpdate, BotUpdateType
-
+from telefone.framework.dispatch.view.message import MessageView
+from telefone.framework.dispatch.view.raw import HandlerBasement, RawUpdateView
 
 DEFAULT_CUSTOM_RULES: Dict[str, Type[ABCRule]] = {
-    "text": MatchRule,
+    "text": TextRule,
     "command": CommandRule,
+    "callback_data": CallbackDataRule,
     "regex": RegexRule,
     "regexp": RegexRule,
     "state": StateRule,
@@ -43,8 +40,8 @@ DEFAULT_CUSTOM_RULES: Dict[str, Type[ABCRule]] = {
     "function": FuncRule,
     "coro": CoroutineRule,
     "coroutine": CoroutineRule,
-    "levenstein": LevensteinRule,
-    "lev": LevensteinRule,
+    "levenstein": LevenshteinRule,
+    "lev": LevenshteinRule,
     "from_chat": PeerRule,
     "length": MessageLengthRule,
 }
@@ -52,8 +49,8 @@ DEFAULT_CUSTOM_RULES: Dict[str, Type[ABCRule]] = {
 
 class Labeler(ABCLabeler):
     def __init__(self, **kwargs):
-        self.message_view = BotMessageView()
-        self.raw_update_view = BotRawUpdateView()
+        self.message_view = MessageView()
+        self.raw_update_view = RawUpdateView()
 
         self.custom_rules = kwargs.get("custom_rules") or DEFAULT_CUSTOM_RULES
         self.auto_rules: List["ABCRule"] = []
@@ -69,7 +66,7 @@ class Labeler(ABCLabeler):
         return re.IGNORECASE in self.rule_config["flags"]
 
     @vbml_ignore_case.setter
-    def vbml_ignore_case(self, ignore_case: bool):
+    def vbml_ignore_case(self, ignore_case: bool) -> None:
         """Adds ignore case flag to rule config flags or removes it"""
         if not ignore_case:
             self.rule_config["vbml_flags"] ^= re.IGNORECASE
@@ -81,7 +78,7 @@ class Labeler(ABCLabeler):
         return self.rule_config["vbml_patcher"]
 
     @vbml_patcher.setter
-    def vbml_patcher(self, patcher: Patcher):
+    def vbml_patcher(self, patcher: Patcher) -> None:
         self.rule_config["vbml_patcher"] = patcher
 
     @property
@@ -89,7 +86,7 @@ class Labeler(ABCLabeler):
         return self.rule_config["vbml_flags"]
 
     @vbml_flags.setter
-    def vbml_flags(self, flags: re.RegexFlag):
+    def vbml_flags(self, flags: re.RegexFlag) -> None:
         self.rule_config["vbml_flags"] = flags
 
     def message(
@@ -162,8 +159,8 @@ class Labeler(ABCLabeler):
 
     def raw_update(
         self,
-        update: Union[UpdateName, List[UpdateName]],
-        dataclass: Union[Type[dict], Type["BaseBotUpdate"]] = dict,
+        update: Union[BotUpdateType, List[BotUpdateType]],
+        dataclass: BaseBotUpdate,
         *rules: "ABCRule",
         blocking: bool = True,
         **custom_rules,
@@ -177,9 +174,7 @@ class Labeler(ABCLabeler):
 
         def decorator(func):
             for u in update:
-                if isinstance(u, str):
-                    u = BotUpdateType(u)
-                handler_basement = BotHandlerBasement(
+                handler_basement = HandlerBasement(
                     dataclass,
                     FromFuncHandler(
                         func,
@@ -195,14 +190,14 @@ class Labeler(ABCLabeler):
 
         return decorator
 
-    def load(self, labeler: "Labeler"):
+    def load(self, labeler: "Labeler") -> None:
         self.message_view.handlers.extend(labeler.message_view.handlers)
         self.message_view.middlewares.extend(labeler.message_view.middlewares)
         self.raw_update_view.middlewares.extend(labeler.raw_update_view.middlewares)
 
-        for event, handler_basements in labeler.raw_update_view.handlers.items():
-            event_handlers = self.raw_update_view.handlers.setdefault(event, [])
-            event_handlers.extend(handler_basements)
+        for update, handler_basements in labeler.raw_update_view.handlers.items():
+            update_handlers = self.raw_update_view.handlers.setdefault(update, [])
+            update_handlers.extend(handler_basements)
 
     def get_custom_rules(self, custom_rules: Dict[str, Any]) -> List["ABCRule"]:
         return [self.custom_rules[k].with_config(self.rule_config)(v) for k, v in custom_rules.items()]  # type: ignore

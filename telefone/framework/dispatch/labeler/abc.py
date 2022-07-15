@@ -1,15 +1,13 @@
 from abc import ABC, abstractmethod
 from typing import Any, Callable, Dict, List, Union
 
-from telefone_types.objects import Message
-from telefone_types.updates.types import BotUpdateType
+from telefone_types.updates import BaseBotUpdate, BotUpdateType, MessageUpdate
 
 from telefone.framework.dispatch.rule import ABCRule
 from telefone.framework.dispatch.view import ABCView
 
-LabeledMessageHandler = Callable[..., Callable[[Message], Any]]
+LabeledMessageHandler = Callable[..., Callable[[MessageUpdate], Any]]
 LabeledHandler = Callable[..., Callable[[Any], Any]]
-UpdateName = Union[BotUpdateType, str]
 
 
 class ABCLabeler(ABC):
@@ -30,8 +28,8 @@ class ABCLabeler(ABC):
     @abstractmethod
     def raw_update(
         self,
-        update: Union[UpdateName, List[UpdateName]],
-        dataclass: Callable = dict,
+        update: Union[BotUpdateType, List[BotUpdateType]],
+        dataclass: BaseBotUpdate,
         *rules: "ABCRule",
         **custom_rules,
     ) -> LabeledHandler:

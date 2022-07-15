@@ -1,12 +1,10 @@
-from typing import NoReturn
-
 from telefone.api import API
 
 # Make an API with a token from an environment variable.
 api = API(__import__("os").getenv("token"))
 
 
-async def main() -> NoReturn:
+async def main() -> None:
     # Make a single API request.
     print(await api.request("getMe", {}))
 

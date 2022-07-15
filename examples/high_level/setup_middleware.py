@@ -1,10 +1,11 @@
-from telefone import BaseMiddleware, Bot, Message
+from telefone import BaseMiddleware, Bot, Message, Token
 from telefone_types.objects import User
 
 # Make a bot with a token from an environment variable.
-bot = Bot(__import__("os").getenv("token"))
+bot = Bot(Token.from_env())
 
 
+@bot.labeler.message_view.register_middleware
 class SimpleMiddleware(BaseMiddleware[Message]):
     async def pre(self) -> None:
         """
@@ -21,6 +22,7 @@ class SimpleMiddleware(BaseMiddleware[Message]):
         await self.update.answer("Goodbye, world!")
 
 
+@bot.labeler.message_view.register_middleware
 class PassthroughMiddleware(BaseMiddleware[Message]):
     """
     You can actually have any number of pre and post middlewares.
@@ -61,10 +63,6 @@ async def who_am_i_handler(_, user: User) -> str:
     first_name = user.first_name.capitalize()
     return f"I remember you! {first_name} you are!"
 
-
-# Register middleware that we've created above.
-bot.labeler.message_view.register_middleware(SimpleMiddleware)
-bot.labeler.message_view.register_middleware(PassthroughMiddleware)
 
 # Run loop > loop.run_forever() > with tasks created in loop_wrapper before.
 # The main polling task for bot is bot.run_polling()

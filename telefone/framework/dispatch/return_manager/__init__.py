@@ -1,2 +1,2 @@
 from .abc import ABCReturnManager
-from .base import BotMessageReturnManager
+from .message import MessageReturnManager

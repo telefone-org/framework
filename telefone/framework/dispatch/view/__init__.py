@@ -1,4 +1,4 @@
-from .abc.dispense import ABCDispenseView
-from .abc.view import ABCView
+from .abc import ABCView
+from .message import MessageView
 
-__all__ = ("ABCDispenseView", "ABCView")
+__all__ = ("ABCDispenseView", "ABCView", "MessageView")

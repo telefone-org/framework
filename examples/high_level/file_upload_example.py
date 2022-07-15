@@ -1,29 +1,27 @@
-from typing import NoReturn
-
-from telefone import Bot, Message
+from telefone import Bot, Message, Token
 from telefone.api.utils import File
 
 # Make a bot with a token from an environment variable.
-bot = Bot(__import__("os").getenv("token"))
+bot = Bot(Token.from_env())
 
 
 # Register a handler that will upload files.
 @bot.on.message(command="upload")
-async def upload_handler(msg: Message) -> NoReturn:
-    # Let's upload a picture of fresh red apples.
+async def upload_handler(msg: Message) -> None:
+    # Upload a picture of fresh red apples.
     await msg.ctx_api.send_photo(
         chat_id=msg.chat.id,
         caption="Testing pictures!",
         # Open the file and pass its contents directly in `photo` param.
-        photo=await File.from_path("examples/files/apples.webp"),
+        photo=await File.from_path("examples/high_level/files/apples.webp"),
     )
 
-    # To set the mood, let's upload a recording of soothing melody.
+    # Upload a recording of soothing melody.
     await msg.ctx_api.send_audio(
         chat_id=msg.chat.id,
         caption="Telefone for the win!",
         # Open the file and pass its contents directly in `audio` param.
-        audio=await File.from_path("examples/files/music.mp3"),
+        audio=await File.from_path("examples/high_level/files/music.mp3"),
     )
 
     # You can use raw bytes to create a file. Here we are downloading
