@@ -1,5 +1,5 @@
 from asyncio import AbstractEventLoop, get_event_loop
-from typing import NoReturn, Optional, Union
+from typing import List, NoReturn, Optional, Union
 
 from telefone.api import ABCAPI, API, Token
 from telefone.exception_factory import ABCErrorHandler, ErrorHandler
@@ -38,7 +38,7 @@ class Bot(ABCFramework):
         self._loop = loop
 
     async def run_polling(
-        self, offset: int = 0, allowed_updates: list[str] = []
+        self, offset: int = 0, allowed_updates: List[str] = []
     ) -> NoReturn:
         self.polling.offset, self.polling.allowed_updates = offset, allowed_updates
         logger.info("Polling will be started")
