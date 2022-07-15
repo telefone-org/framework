@@ -2,8 +2,6 @@ import os
 import sys
 from typing import NoReturn
 
-from watchfiles import awatch
-
 from telefone.modules import logger
 
 STARTUP_DIR: str = os.getcwd()
@@ -26,6 +24,14 @@ async def watch_to_reload(src_dir: str) -> None:
     in source code are detected.
     :return:
     """
+    try:
+        from watchfiles import awatch
+    except ImportError as e:
+        raise SystemExit(
+            "You need to install `watchfiles` package "
+            "to be able to use auto_reload."
+        ) from e
+
     async for _ in awatch(src_dir):
         logger.info("Changes were found. Restarting...")
         restart()
