@@ -16,8 +16,8 @@ from telefone.framework.dispatch.rule.bot import (
     CommandRule,
     CoroutineRule,
     FuncRule,
-    LevensteinRule,
-    MatchRule,
+    LevenshteinRule,
+    TextRule,
     MessageLengthRule,
     PeerRule,
     RegexRule,
@@ -29,7 +29,7 @@ from telefone.framework.dispatch.view.message import MessageView
 from telefone.framework.dispatch.view.raw import HandlerBasement, RawUpdateView
 
 DEFAULT_CUSTOM_RULES: Dict[str, Type[ABCRule]] = {
-    "text": MatchRule,
+    "text": TextRule,
     "command": CommandRule,
     "callback_data": CallbackDataRule,
     "regex": RegexRule,
@@ -40,8 +40,8 @@ DEFAULT_CUSTOM_RULES: Dict[str, Type[ABCRule]] = {
     "function": FuncRule,
     "coro": CoroutineRule,
     "coroutine": CoroutineRule,
-    "levenstein": LevensteinRule,
-    "lev": LevensteinRule,
+    "levenstein": LevenshteinRule,
+    "lev": LevenshteinRule,
     "from_chat": PeerRule,
     "length": MessageLengthRule,
 }

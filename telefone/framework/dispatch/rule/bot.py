@@ -83,15 +83,15 @@ class FuncRule(ABCMessageRule):
         return self.func(update)  # type: ignore
 
 
-class LevensteinRule(ABCMessageRule):
+class LevenshteinRule(ABCMessageRule):
     def __init__(
         self,
-        levenstein_texts: Union[List[str], str],
+        levenshtein_texts: Union[List[str], str],
         max_distance: int = 1,
     ):
-        if isinstance(levenstein_texts, str):
-            levenstein_texts = [levenstein_texts]
-        self.levenstein_texts = levenstein_texts
+        if isinstance(levenshtein_texts, str):
+            levenshtein_texts = [levenshtein_texts]
+        self.levenshtein_texts = levenshtein_texts
         self.max_distance = max_distance
 
     @staticmethod
@@ -117,13 +117,13 @@ class LevensteinRule(ABCMessageRule):
         return current_row[n]
 
     async def check(self, message: MessageUpdate) -> bool:
-        for levenstein_text in self.levenstein_texts:
-            if self.distance(message.text, levenstein_text) <= self.max_distance:
+        for levenshtein_text in self.levenshtein_texts:
+            if self.distance(message.text, levenshtein_text) <= self.max_distance:
                 return True
         return False
 
 
-class MatchRule(ABCMessageRule):
+class TextRule(ABCMessageRule):
     def __init__(
         self,
         pattern: Union[str, "Pattern", List[Union[str, "Pattern"]]],
@@ -230,3 +230,20 @@ class StateGroupRule(ABCMessageRule):
         if message.state_peer is None:
             return not self.state_group
         return type(message.state_peer.state) in self.state_group
+
+
+__all__ = (
+    "ABCMessageRule",
+    "CallbackDataRule",
+    "CommandRule",
+    "CoroutineRule",
+    "FuncRule",
+    "LevenshteinRule",
+    "TextRule",
+    "MessageLengthRule",
+    "PeerRule",
+    "RegexRule",
+    "ReplyMessageRule",
+    "StateRule",
+    "StateGroupRule",
+)
